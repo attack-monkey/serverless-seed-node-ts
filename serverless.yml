@@ -1,0 +1,77 @@
+service:
+  name: ts-lambda-seed-project
+
+frameworkVersion: ">=1.0.0 <2.0.0"
+
+plugins:
+  - serverless-webpack
+  # - serverless-aws-documentation
+  # - serverless-domain-manager
+
+custom:
+  webpack:
+    includeModules: true
+  version: 1.1.0
+  apiMajorVersion: v1
+  company: XXXXX
+  platform: appl
+  client: common
+  region: ${opt:region}
+  environment: ${opt:environment}
+  profile: ${opt:profile}
+  stage: ${opt:environment}
+  debug: ${opt:degug, "false"}
+  # customDomain:
+  #   domainName: '${self:custom.environment}-payment-service-${self:custom.region}.some-domain.com'
+  #   basePath: ''
+  #   stage: ${self:custom.environment}
+  #   certificateName: '*.api.some-place.com'
+  #   createRoute53Record: false
+  #   endpointType: 'edge'
+  # documentation:
+  #   info:
+  #     version: ${self:custom.version}
+  #     title: ts-lambda-seed-project
+  #     description: A typescript lambda seed project
+  #     licence:
+  #       name: MIT
+  #       url: https://www.some-place.com/
+  #   models:
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  versionFunctions: false
+  region: ${self:custom.region}
+  profile: ${self:custom.profile}
+  stage: ${self:custom.stage}
+
+functions:
+  hello:
+    handler: handler.hello
+    description: This function provides a bootstrap AWS serverless response.
+    memorySize: 512
+    timeout: 30
+    tags:
+      Version: ${self:custom.version}
+      Company: ${self:custom.company}
+      Environment: ${self:custom.environment}
+      Platform: ${self:custom.platform}
+      Client: ${self:custom.client}
+      Name: ${self:custom.environment}-ts-test-globals
+    environment:
+      FORCE_DEBUG: ${self:custom.forceDebug}
+      ENVIRONMENT: ${self:custom.environment}
+      REGION: ${self:custom.region}
+    events:
+      - http:
+          path: ${self:custom.apiMajorVersion}/hello
+          method: get
+          cors: true
+          request:
+            parameters:
+              headers:
+                Authorization: true
+                Access-Control-Allow-Headers: true
+                Access-Control-Allow-Methods: true
+                Access-Control-Allow-Origin: true
